@@ -63,11 +63,65 @@ const reelsData = [
 // that hand-off is choreographed.
 const REEL_MORPH_NAME = 'reel-hero-morph';
 
+// Posters data — single source of truth for both the two featured posters
+// in the Creative Journey cards (indices 0 & 1) and the "View more posters"
+// mosaic (all six). Keeping one array means a click anywhere always maps
+// to the same index, so the morph + prev/next navigation stay in sync.
+const postersData = [
+  {
+    tag: "POSTER MAKING",
+    title: "Visual storytelling, framed.",
+    desc: "Editorial poster blending warm vintage textures with clean, minimalist layout.",
+    src: "/assets/poster1.png"
+  },
+  {
+    tag: "POSTER MAKING",
+    title: "Layouts that hold a mood.",
+    desc: "A typographic study in color-led composition, made for print and digital lookbooks.",
+    src: "/assets/poster2.png"
+  },
+  {
+    tag: "POSTER MAKING",
+    title: "Poster Study 03",
+    desc: "Part of an ongoing archive of editorial print and layout explorations.",
+    src: "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    tag: "POSTER MAKING",
+    title: "Poster Study 04",
+    desc: "Grid alignment and color story, designed to capture an everyday statement.",
+    src: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    tag: "POSTER MAKING",
+    title: "Poster Study 05",
+    desc: "Warm paper texture meets organic vector shape in this print study.",
+    src: "https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    tag: "POSTER MAKING",
+    title: "Poster Study 06",
+    desc: "Another piece from the same visual language, built for physical print.",
+    src: "https://images.unsplash.com/photo-1580137189272-c9379f8864fd?auto=format&fit=crop&w=800&q=80"
+  }
+];
+
+// Shared view-transition-name for the poster morph — same pattern as
+// REEL_MORPH_NAME above, just for images instead of video.
+const POSTER_MORPH_NAME = 'poster-hero-morph';
+
 export default function App() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [scrolled, setScrolled] = useState(false);
   const [activeGallery, setActiveGallery] = useState(null);
+
+  // Poster viewer — same index-based pattern as the reel viewer below,
+  // so next/prev can step through postersData while the modal stays open.
+  const [activePosterIndex, setActivePosterIndex] = useState(null);
+  const [posterNavDirection, setPosterNavDirection] = useState(null); // 'next' | 'prev' | null
+  const posterPanelRef = useRef(null);
+  const posterTouchStartXRef = useRef(null);
 
   // Reels viewer is index-based (not a raw src string) so we can navigate
   // next/prev between entries while the modal stays open.
@@ -109,6 +163,8 @@ export default function App() {
 
   const activeReel = activeReelIndex !== null ? reelsData[activeReelIndex] : null;
   const activeVideo = activeReel ? activeReel.video : null;
+
+  const activePoster = activePosterIndex !== null ? postersData[activePosterIndex] : null;
 
   // References for scroll spy
   const sectionIds = ['hero', 'journey', 'reels', 'contact'];
@@ -286,7 +342,7 @@ export default function App() {
 
   // Modal/video scrolling lock
   useEffect(() => {
-    if (activeGallery || activeReelIndex !== null) {
+    if (activeGallery || activeReelIndex !== null || activePosterIndex !== null) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -294,7 +350,7 @@ export default function App() {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [activeGallery, activeReelIndex]);
+  }, [activeGallery, activeReelIndex, activePosterIndex]);
 
   // Reset mute state to muted every time a new reel is opened (matches real Reels UX)
   useEffect(() => {
@@ -594,6 +650,89 @@ export default function App() {
     touchStartYRef.current = null;
   };
 
+  // ---------------------------------------------------------------------
+  // Poster viewer open/close/navigate — same View Transitions morph as
+  // the reel viewer above, so a clicked poster thumbnail (in a Journey
+  // card, or in the "View more posters" mosaic) grows into the full
+  // framed view instead of a modal simply appearing. Images decode
+  // instantly (no autoplay/buffering race like video), so this version
+  // skips the isMorphing/poster-frame-swap step the reel viewer needs.
+  // ---------------------------------------------------------------------
+
+  const openPoster = (idx) => {
+    const poster = postersData[idx];
+    if (!poster) return;
+
+    const thumbEl = document.querySelector(`[data-poster-idx="${idx}"]`);
+
+    if (!document.startViewTransition || !thumbEl) {
+      setPosterNavDirection(null);
+      setActivePosterIndex(idx);
+      return;
+    }
+
+    thumbEl.style.viewTransitionName = POSTER_MORPH_NAME;
+
+    const transition = document.startViewTransition(() => {
+      flushSync(() => {
+        setPosterNavDirection(null);
+        setActivePosterIndex(idx);
+      });
+      thumbEl.style.viewTransitionName = '';
+    });
+
+    transition.finished.catch(() => {});
+  };
+
+  const closePoster = () => {
+    if (activePosterIndex === null) return;
+
+    const thumbEl = document.querySelector(`[data-poster-idx="${activePosterIndex}"]`);
+
+    if (!document.startViewTransition) {
+      setActivePosterIndex(null);
+      return;
+    }
+
+    const transition = document.startViewTransition(() => {
+      flushSync(() => setActivePosterIndex(null));
+      if (thumbEl) thumbEl.style.viewTransitionName = POSTER_MORPH_NAME;
+    });
+
+    transition.finished.finally(() => {
+      if (thumbEl) thumbEl.style.viewTransitionName = '';
+    });
+  };
+
+  const goToPoster = (newIdx, direction) => {
+    if (!postersData[newIdx]) return;
+    setPosterNavDirection(direction);
+    setActivePosterIndex(newIdx);
+  };
+
+  const goNextPoster = () => {
+    if (activePosterIndex === null) return;
+    goToPoster((activePosterIndex + 1) % postersData.length, 'next');
+  };
+
+  const goPrevPoster = () => {
+    if (activePosterIndex === null) return;
+    goToPoster((activePosterIndex - 1 + postersData.length) % postersData.length, 'prev');
+  };
+
+  // Swipe left/right to move between posters
+  const handlePosterTouchStart = (e) => {
+    posterTouchStartXRef.current = e.touches[0].clientX;
+  };
+  const handlePosterTouchEnd = (e) => {
+    if (posterTouchStartXRef.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - posterTouchStartXRef.current;
+    const SWIPE_THRESHOLD = 55;
+    if (deltaX < -SWIPE_THRESHOLD) goNextPoster();
+    else if (deltaX > SWIPE_THRESHOLD) goPrevPoster();
+    posterTouchStartXRef.current = null;
+  };
+
   // Close modals on escape key; arrow keys navigate an open reel
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -603,6 +742,7 @@ export default function App() {
         // keystroke, or it reads as two things happening at once.
         if (document.fullscreenElement || document.webkitFullscreenElement) return;
         if (activeReelIndex !== null) closeReel();
+        if (activePosterIndex !== null) closePoster();
         if (activeGallery) setActiveGallery(null);
         return;
       }
@@ -614,11 +754,19 @@ export default function App() {
           e.preventDefault();
           goPrevReel();
         }
+      } else if (activePosterIndex !== null) {
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          goNextPoster();
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          goPrevPoster();
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeReelIndex, activeGallery]);
+  }, [activeReelIndex, activeGallery, activePosterIndex]);
 
   // ---------------------------------------------------------------------
   // Desktop hover preview — a short delay after the cursor lands on a
@@ -748,9 +896,17 @@ export default function App() {
             <div className="journey-grid">
               {/* Journey Item 1: Poster Making */}
               <div className="journey-card reveal-on-scroll">
-                <div className="journey-media">
+                <div
+                  className="journey-media journey-media-clickable"
+                  data-poster-idx={0}
+                  onClick={() => openPoster(0)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="View full poster: Visual storytelling, framed."
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(0); } }}
+                >
                   <img src="/assets/poster1.png" alt="Aesthetic Poster Design" className="journey-img" />
-                  <div className="journey-badge"><i className="fa-solid fa-paintbrush"></i></div>
+                  <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
                 <div className="journey-content">
                   <span className="journey-category">POSTER MAKING</span>
@@ -763,9 +919,17 @@ export default function App() {
 
               {/* Journey Item 2: More Poster Work */}
               <div className="journey-card reveal-on-scroll">
-                <div className="journey-media">
+                <div
+                  className="journey-media journey-media-clickable"
+                  data-poster-idx={1}
+                  onClick={() => openPoster(1)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="View full poster: Layouts that hold a mood."
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(1); } }}
+                >
                   <img src="/assets/poster2.png" alt="Editorial Poster Series" className="journey-img" />
-                  <div className="journey-badge"><i className="fa-solid fa-paintbrush"></i></div>
+                  <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
                 <div className="journey-content">
                   <span className="journey-category">POSTER MAKING</span>
@@ -895,9 +1059,19 @@ export default function App() {
               <h3 className="gallery-modal-title">{activeGallery.title}</h3>
             </div>
             <div className="gallery-modal-grid">
-              {activeGallery.items.map((image, idx) => (
-                <div className="gallery-item" key={idx}>
-                  <img src={image} alt={activeGallery.title} />
+              {postersData.map((poster, idx) => (
+                <div
+                  className="gallery-item-wrapper"
+                  key={idx}
+                  data-poster-idx={idx}
+                  onClick={() => openPoster(idx)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View full poster: ${poster.title}`}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(idx); } }}
+                >
+                  <img src={poster.src} alt={poster.title} />
+                  <div className="gallery-item-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
               ))}
             </div>
@@ -997,6 +1171,53 @@ export default function App() {
             >
               <div className="reel-progress-bg"></div>
               <div className="reel-progress-fill" ref={progressFillRef}></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Poster Modal — morphs from the clicked poster thumbnail, same
+          View Transitions technique as the reel viewer, but framed like a
+          portrait print instead of a vertical video (4:5 mat, not 9:16). */}
+      {activePoster && (
+        <div className="poster-modal open" role="dialog" aria-modal="true" aria-label={activePoster.title}>
+          <div className="poster-modal-backdrop" onClick={closePoster}></div>
+          <div
+            className="poster-modal-panel"
+            ref={posterPanelRef}
+            style={{ viewTransitionName: POSTER_MORPH_NAME }}
+            data-nav-dir={posterNavDirection || undefined}
+            onTouchStart={handlePosterTouchStart}
+            onTouchEnd={handlePosterTouchEnd}
+          >
+            <button
+              type="button"
+              className="poster-modal-close"
+              onClick={closePoster}
+              aria-label="Close poster"
+            >
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+
+            <div className="poster-counter">
+              {String(activePosterIndex + 1).padStart(2, '0')} / {String(postersData.length).padStart(2, '0')}
+            </div>
+
+            <button type="button" className="poster-nav-btn poster-nav-prev" onClick={goPrevPoster} aria-label="Previous poster">
+              <i className="fa-solid fa-chevron-left"></i>
+            </button>
+            <button type="button" className="poster-nav-btn poster-nav-next" onClick={goNextPoster} aria-label="Next poster">
+              <i className="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <div className="poster-frame" key={activePosterIndex}>
+              <img src={activePoster.src} alt={activePoster.title} className="poster-frame-img" />
+            </div>
+
+            <div className="poster-modal-info">
+              <span className="poster-modal-tag">{activePoster.tag}</span>
+              <h3 className="poster-modal-title">{activePoster.title}</h3>
+              <p className="poster-modal-desc">{activePoster.desc}</p>
             </div>
           </div>
         </div>
