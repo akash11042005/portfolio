@@ -877,13 +877,15 @@ export default function App() {
             <div className="nav-socials">
               <a href="https://www.instagram.com/lavanyay.y?igsh=d281OHBmbzZwbDJy" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-ig" aria-label="Instagram"><i className="fa-brands fa-instagram"></i></a>
               <a href="https://www.youtube.com/@lavanyahh.h" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-yt" aria-label="YouTube"><i className="fa-brands fa-youtube"></i></a>
-<a
-  href="mailto:lavanyac027@gmail.com?subject=Collaboration%20Inquiry"
-  target="_self"
-  aria-label="Email Lavanya"
->
-  <i className="fa-regular fa-envelope"></i>
-</a>            </div>
+              <a
+                href="mailto:lavanyac027@gmail.com?subject=Collaboration%20Inquiry"
+                target="_self"
+                className="social-chip social-chip-mail"
+                aria-label="Email Lavanya"
+              >
+                <i className="fa-regular fa-envelope"></i>
+              </a>
+            </div>
             <button ref={hamburgerRef} className={`hamburger ${isNavOpen ? 'open' : ''}`} id="hamburger" aria-label="Toggle navigation" onClick={() => setIsNavOpen(!isNavOpen)}>
               <span className="hamburger-line"></span>
               <span className="hamburger-line"></span>

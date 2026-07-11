@@ -218,6 +218,13 @@ body {
   box-shadow: 0 6px 22px rgba(255, 0, 0, 0.35);
 }
 
+.social-chip-mail:hover {
+  background: var(--color-dark);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 6px 22px rgba(31, 27, 26, 0.3);
+}
+
 .social-chip-label {
   font-size: 0.72rem;
   font-weight: 600;
