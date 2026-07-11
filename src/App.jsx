@@ -111,7 +111,7 @@ export default function App() {
   const activeVideo = activeReel ? activeReel.video : null;
 
   // References for scroll spy
-  const sectionIds = ['hero', 'journey', 'reels', 'about', 'contact'];
+  const sectionIds = ['hero', 'journey', 'reels', 'contact'];
 
   // Handle Scroll Spy & Navbar Scroll Styling — throttled with rAF to prevent re-render storms
   useEffect(() => {
@@ -683,7 +683,6 @@ export default function App() {
             <a href="#hero" className={`nav-link ${activeSection === 'hero' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>Home</a>
             <a href="#journey" className={`nav-link ${activeSection === 'journey' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>Crafts</a>
             <a href="#reels" className={`nav-link ${activeSection === 'reels' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>Reels</a>
-            <a href="#about" className={`nav-link ${activeSection === 'about' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>About</a>
             <a href="#contact" className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>Contact</a>
           </nav>
 
@@ -717,7 +716,7 @@ export default function App() {
                 Made by hand, made to move one frame, one stitch at a time.
               </p>
               <div className="hero-actions">
-                <a href="mailto:lavanyac027@gmail.com" className="btn btn-primary">Work with me</a>
+                <a href="#contact" className="btn btn-primary">Work with me</a>
               </div>
             </div>
 
@@ -836,7 +835,7 @@ export default function App() {
       </main>
 
       {/* Unified Bio & Contact Footer */}
-      <footer className="footer reveal-on-scroll" id="about">
+      <footer className="footer reveal-on-scroll" id="contact">
         <div className="container footer-container">
           <div className="footer-left-col">
             <h2 className="bio-title">If you're a brand looking to collaborate or need a creative eye on your next project then let's make something worth keeping.</h2>
@@ -849,7 +848,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="footer-right-col" id="contact">
+          <div className="footer-right-col">
             {/* Repositioned Social links with logo icons, aligned perfectly with tag height */}
             <div className="footer-contact-header">
               <span className="footer-tag">LET'S COLLABORATE</span>

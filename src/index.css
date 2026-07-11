@@ -46,8 +46,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* body::before grid overlay removed — was causing fixed-position repaint on every scroll */
-
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration: none; transition: var(--transition-fast); }
 button { font-family: inherit; outline: none; border: none; background: none; }
@@ -97,13 +95,10 @@ button { font-family: inherit; outline: none; border: none; background: none; }
   .butterfly.idle .wing-right   { animation: flapRight 1.4s ease-in-out infinite; }
 }
 
-/* --- Background Blobs — replaced animated blurs with a single static radial-gradient on body --- */
-/* The blobs div is kept in HTML but hidden; background is applied via body for zero-cost rendering */
 .bg-blobs-container {
   display: none;
 }
 
-/* Static ambient gradient background — zero GPU cost, zero animations, zero repaints */
 body {
   background-image:
     radial-gradient(ellipse 60% 40% at 10% 10%, rgba(251, 234, 230, 0.55) 0%, transparent 70%),
@@ -113,7 +108,6 @@ body {
 }
 
 /* --- Scroll Reveal --- */
-/* will-change removed: promoting every card as a separate GPU layer causes memory pressure on page load */
 .reveal-on-scroll {
   opacity: 0;
   transform: translateY(24px);
@@ -202,7 +196,6 @@ body {
   box-shadow: 0 6px 18px var(--color-rose-gold-glow);
 }
 
-/* Instagram brand hover: gradient background, white icon */
 .social-chip-ig:hover {
   background: linear-gradient(135deg, #f9ce34 0%, #ee2a7b 50%, #6228d7 100%);
   color: #fff;
@@ -210,7 +203,6 @@ body {
   box-shadow: 0 6px 22px rgba(238, 42, 123, 0.45);
 }
 
-/* YouTube brand hover: YouTube red background, white icon */
 .social-chip-yt:hover {
   background: #FF0000;
   color: #fff;
@@ -218,7 +210,6 @@ body {
   box-shadow: 0 6px 22px rgba(255, 0, 0, 0.35);
 }
 
-/* Text label next to the icon (footer only — hidden in navbar by overflow) */
 .social-chip-label {
   font-size: 0.72rem;
   font-weight: 600;
@@ -417,7 +408,6 @@ body {
   gap: 2rem 2.5vw;
 }
 
-/* Hidden cards collapsed by default */
 .journey-hidden {
   display: none;
 }
@@ -442,10 +432,6 @@ body {
   box-shadow: 0 18px 44px rgba(214,164,152,0.11);
 }
 
-/* SIZE FIX: box height fixed at roughly half of what the natural-size
-   images were rendering at (some of these poster photos are very tall).
-   object-fit: contain still shows the whole image, just scaled down to
-   fit within this smaller box instead of displaying at full native size. */
 .journey-media {
   width: 100%;
   height: 380px;
@@ -532,7 +518,6 @@ body {
 .journey-cta:hover::after { width: 100%; }
 .journey-cta:hover i { transform: translateX(5px); }
 
-/* View More Button */
 .journey-toggle-wrap {
   display: flex;
   justify-content: center;
@@ -587,7 +572,6 @@ body {
   align-items: start;
 }
 
-/* Symmetric stagger: odd cards normal, even cards pushed down */
 .reels-grid > .reel-card:nth-child(1) { margin-top: 0; }
 .reels-grid > .reel-card:nth-child(2) { margin-top: 56px; }
 .reels-grid > .reel-card:nth-child(3) { margin-top: 0; }
@@ -606,8 +590,6 @@ body {
   overflow: hidden;
   aspect-ratio: 0.72;
   box-shadow: 0 8px 28px rgba(214,164,152,0.1);
-  /* contain layout/paint so the hover-preview video and the morph
-     transition never leak repaints into neighboring cards */
   contain: layout paint;
 }
 
@@ -618,8 +600,6 @@ body {
   transition: transform 0.7s cubic-bezier(0.16,1,0.3,1);
 }
 
-/* Silent autoplay preview that fades in over the thumbnail on hover
-   (desktop / fine-pointer devices only — see media query below) */
 .reel-hover-preview {
   position: absolute;
   inset: 0;
@@ -665,8 +645,6 @@ body {
 .reel-badge i { transform: translateX(1.5px); }
 .reel-play-btn { cursor: pointer; }
 
-/* Play badge steps aside once the hover preview takes over — the moving
-   footage is the invitation now, the icon would just be visual clutter */
 .reel-hover-preview.active ~ .reel-badge {
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.85);
@@ -1022,18 +1000,11 @@ body {
 
 .video-modal.open .video-modal-panel { transform: scale(1) translateY(0); }
 
-/* Disable transitions and transforms during active morph view transitions to prevent animation fight */
 .video-modal-panel.is-morphing {
   transition: none !important;
   transform: none !important;
 }
 
-/* Reel-style panel: tall 9:16 vertical, like Instagram Reels.
-   Rounding is done via clip-path rather than overflow:hidden — clipping a
-   live video decode surface with overflow:hidden + border-radius forces
-   many browsers onto a slow per-frame software masking path (this was the
-   actual source of the stutter in windowed mode: fullscreen was smooth
-   because it squares off to border-radius:0 and has nothing to mask). */
 .video-modal-panel.reel-style {
   width: min(420px, 90vw);
   height: min(90vh, 760px);
@@ -1044,25 +1015,11 @@ body {
   box-shadow: 0 28px 70px rgba(0,0,0,0.5);
 }
 
-/* When the browser supports View Transitions, this panel and the clicked
-   grid thumbnail briefly share a view-transition-name (assigned inline in
-   JSX), so the panel appears to grow directly out of the thumbnail rather
-   than fading in on top of it. Tune the morph's pacing here — the default
-   UA animation (cross-fade + scale) already looks right, this just times it
-   to match the rest of the site's cubic-bezier(0.16,1,0.3,1) motion language. */
 ::view-transition-group(reel-hero-morph) {
   animation-duration: 0.5s;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Video fills the frame, no native controls, tap to play/pause.
-   The video rounds its own corners directly (matching the panel's radius)
-   instead of depending on the parent's clip-path alone — self-rounding is
-   the cheapest path for the decode surface, the parent clip-path is now
-   just a backstop for the other overlay elements near the edges.
-   translateZ(0) + backface-visibility promote it to its own GPU compositor
-   layer, which keeps playback smooth even while other animations
-   (butterfly cursor, scroll reveals) are running on the page. */
 .reel-video {
   width: 100%;
   height: 100%;
@@ -1076,9 +1033,6 @@ body {
   -webkit-backface-visibility: hidden;
 }
 
-/* Next/prev navigation gives the incoming video a gentle directional
-   entrance — reinforces "this is a feed you're scrolling", not just a
-   src swap. Keyed on activeReelIndex so this replays on every navigation. */
 @keyframes reelSlideInUp {
   from { transform: translateY(26px) translateZ(0); opacity: 0.35; }
   to   { transform: translateY(0) translateZ(0); opacity: 1; }
@@ -1094,7 +1048,6 @@ body {
   animation: reelSlideInDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Reel index badge, top-left — "you are here" in the sequence */
 .reel-counter {
   position: absolute;
   left: 14px; top: 14px;
@@ -1111,7 +1064,6 @@ body {
   pointer-events: none;
 }
 
-/* Up/down nav chevrons, mirrors the mute toggle's glass styling */
 .reel-nav-controls {
   position: absolute;
   right: 14px;
@@ -1146,9 +1098,6 @@ body {
   transform: scale(1.08);
 }
 
-/* Buffering indicator — three soft pulsing dots, centered over the video.
-   Only ever appears if playback genuinely hasn't started within ~220ms
-   (see the isBuffering effect in App.jsx), so a fast start never shows it. */
 .reel-buffering {
   position: absolute;
   left: 50%; top: 50%;
@@ -1174,8 +1123,6 @@ body {
   40% { opacity: 1; transform: scale(1); }
 }
 
-/* Caption overlay — title + description sit over the footage like a real
-   Reels caption, anchored above the seek bar with a soft scrim for legibility */
 .reel-modal-info {
   position: absolute;
   left: 0; right: 0; bottom: 30px;
@@ -1202,9 +1149,6 @@ body {
   max-width: 88%;
 }
 
-/* Seek bar — thin line like Reels/TikTok, tap or drag anywhere to scrub.
-   The visible line sits inside a taller invisible hit-area so it's easy
-   to grab on mobile without needing a fat, ugly bar at rest. */
 .reel-progress-track {
   position: absolute;
   left: 0;
@@ -1237,9 +1181,6 @@ body {
   background: var(--color-rose-gold);
   box-shadow: 0 0 6px rgba(214,51,132,0.5);
   pointer-events: none;
-  /* no transition here on purpose — width is driven every frame via rAF
-     for buttery-smooth motion; a CSS transition would fight that and
-     make it feel laggy instead of smooth */
 }
 
 .reel-progress-track:hover .reel-progress-bg,
@@ -1249,7 +1190,6 @@ body {
   height: 5px;
 }
 
-/* Mute/unmute toggle, bottom-right like Instagram — nudged up to clear the seek bar */
 .video-mute-toggle {
   position: absolute;
   right: 14px;
@@ -1298,7 +1238,6 @@ body {
   transform: rotate(90deg);
 }
 
-/* Fullscreen toggle — top-center, glass style matching close/mute controls */
 .video-fullscreen-toggle {
   position: absolute;
   left: 50%; top: 14px;
@@ -1325,11 +1264,6 @@ body {
   transform: translateX(-50%) scale(1.08);
 }
 
-/* Fullscreen state — panel fills the viewport, corners square off, and the
-   caption/seek-bar footprint gets a little more breathing room. Dropping
-   clip-path here too (not just border-radius) removes the masking cost
-   entirely in the mode where it matters least visually and most for
-   performance headroom on lower-powered devices. */
 .video-modal-panel.reel-style:fullscreen,
 .video-modal-panel.reel-style:-webkit-full-screen {
   width: 100vw;
@@ -1443,17 +1377,43 @@ body {
   .reel-num { font-size: 0.54rem; }
   .reel-badge { width: 32px; height: 32px; font-size: 0.6rem; }
 
-  /* --- Footer --- */
+  /* --- Footer / Contact --- */
   .footer { padding: 3.5rem 0 2rem 0; }
   .footer-container { max-width: 100%; gap: 2rem; margin-bottom: 2.5rem; }
   .footer-right-col { width: 100%; }
   .bio-title { font-size: clamp(1.15rem, 5.5vw, 1.8rem); }
   .footer-email-title { font-size: clamp(1.2rem, 7vw, 2.2rem); }
 
+  /* Contact header (tag + social pills) can overflow on narrow phones —
+     let it wrap, and collapse the pill-shaped social buttons back to
+     compact icon-only circles so the row never breaks layout */
+  .footer-contact-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .footer-header-socials .social-chip {
+    width: 36px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .footer-header-socials .social-chip-label {
+    display: none;
+  }
+
   /* --- Modals --- */
   .gallery-modal-panel { padding: 22px; height: 86vh; border-radius: 18px; }
   .gallery-modal-title { font-size: 1.45rem; }
   .gallery-modal-close { right: 15px; top: 15px; width: 34px; height: 34px; font-size: 14px; }
+
+  /* 220px minimum column is too wide for small phones — shrink it so the
+     gallery grid actually fits 2 columns instead of collapsing to 1 */
+  .gallery-modal-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
   .contact-card { padding: 16px 18px; }
 
   .video-modal-panel.reel-style {
@@ -1475,6 +1435,12 @@ body {
   .polaroid-4 { width: 78px; height: 96px; right: 10px; bottom: 8px; }
 
   .reels-grid > .reel-card:nth-child(5) { width: 60%; }
+
+  /* Tighten spacing/type further at the smallest phone sizes */
+  .container { padding: 0 5vw; }
+  .hero-title { font-size: clamp(2.1rem, 11vw, 3rem); }
+  .contact-card { padding: 14px 16px; }
+  .footer-email-title { font-size: clamp(1.05rem, 8vw, 1.8rem); }
 }
 
 /* --- React Scrolled Navbar State --- */
@@ -1506,7 +1472,6 @@ body {
   gap: 10px;
 }
 
-/* In footer context, chips expand to pill shape to accommodate the text label */
 .footer-header-socials .social-chip {
   width: auto;
   padding: 0 14px;
