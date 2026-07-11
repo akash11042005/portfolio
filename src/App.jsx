@@ -174,8 +174,29 @@ export default function App() {
   // Handle Scroll Spy & Navbar Scroll Styling — throttled with rAF to prevent re-render storms
   useEffect(() => {
     let rafId = null;
+    let resizeRafId = null;
     let lastScrolled = false;
     let lastSection = 'hero';
+
+    // Cache each section's offsetTop/offsetHeight once instead of reading
+    // them from the DOM inside the scroll handler. Reading offsetTop or
+    // offsetHeight forces the browser to run a synchronous layout pass
+    // ("forced reflow") — doing that every scroll frame, for 4 elements,
+    // was the biggest single cause of scroll jank here. We only need to
+    // remeasure when the layout can actually change (on resize), not on
+    // every pixel scrolled.
+    let sectionOffsets = [];
+
+    const measureSections = () => {
+      sectionOffsets = sectionIds
+        .map((id) => {
+          const el = document.getElementById(id);
+          return el ? { id, top: el.offsetTop, height: el.offsetHeight } : null;
+        })
+        .filter(Boolean);
+    };
+
+    measureSections();
 
     const handleScroll = () => {
       if (rafId) return; // already scheduled, skip
@@ -189,16 +210,14 @@ export default function App() {
           setScrolled(nowScrolled);
         }
 
-        // Scroll Spy Active Link
+        // Scroll Spy Active Link — reads from the cached offsets above,
+        // no DOM/layout reads happen inside this hot loop.
         const scrollPos = window.scrollY + 200;
         let currentSection = 'hero';
-        for (const id of sectionIds) {
-          const el = document.getElementById(id);
-          if (el) {
-            if (scrollPos >= el.offsetTop && scrollPos < el.offsetTop + el.offsetHeight) {
-              currentSection = id;
-              break;
-            }
+        for (const section of sectionOffsets) {
+          if (scrollPos >= section.top && scrollPos < section.top + section.height) {
+            currentSection = section.id;
+            break;
           }
         }
         if (currentSection !== lastSection) {
@@ -208,12 +227,23 @@ export default function App() {
       });
     };
 
+    const handleResize = () => {
+      if (resizeRafId) return;
+      resizeRafId = requestAnimationFrame(() => {
+        resizeRafId = null;
+        measureSections();
+      });
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
     handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
       if (rafId) cancelAnimationFrame(rafId);
+      if (resizeRafId) cancelAnimationFrame(resizeRafId);
     };
   }, []);
 
@@ -307,7 +337,7 @@ export default function App() {
       bfly.style.opacity = '0.65';
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
@@ -916,16 +946,16 @@ export default function App() {
 
             <div className="hero-moodboard">
               <div className="polaroid polaroid-1">
-                <img src="/assets/hero1.png" alt="Moodboard image 1" />
+                <img src="/assets/hero1.png" alt="Moodboard image 1" loading="eager" decoding="async" fetchPriority="high" />
               </div>
               <div className="polaroid polaroid-2">
-                <img src="/assets/hero4.png" alt="Moodboard image 2" />
+                <img src="/assets/hero4.png" alt="Moodboard image 2" loading="eager" decoding="async" fetchPriority="high" />
               </div>
               <div className="polaroid polaroid-3">
-                <img src="/assets/hero2.png" alt="Moodboard image 3" />
+                <img src="/assets/hero2.png" alt="Moodboard image 3" loading="eager" decoding="async" />
               </div>
               <div className="polaroid polaroid-4">
-                <img src="/assets/hero3.png" alt="Moodboard image 4" />
+                <img src="/assets/hero3.png" alt="Moodboard image 4" loading="eager" decoding="async" />
               </div>
             </div>
           </div>
@@ -951,7 +981,7 @@ export default function App() {
                   aria-label={`View full poster: ${postersData[0].title}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(0); } }}
                 >
-                  <img src="/assets/poster1.png" alt="Aesthetic Poster Design" className="journey-img" />
+                  <img src="/assets/poster1.png" alt="Aesthetic Poster Design" className="journey-img" loading="lazy" decoding="async" />
                   <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
                 <div className="journey-content">
@@ -972,7 +1002,7 @@ export default function App() {
                   aria-label={`View full poster: ${postersData[1].title}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(1); } }}
                 >
-                  <img src="/assets/poster2.png" alt="Editorial Poster Series" className="journey-img" />
+                  <img src="/assets/poster2.png" alt="Editorial Poster Series" className="journey-img" loading="lazy" decoding="async" />
                   <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
                 <div className="journey-content">
@@ -1011,7 +1041,7 @@ export default function App() {
                     onMouseEnter={() => handleCardMouseEnter(idx, !!reel.video)}
                     onMouseLeave={handleCardMouseLeave}
                   >
-                    <img src={reel.thumb} alt={reel.title} className="reel-thumb" />
+                    <img src={reel.thumb} alt={reel.title} className="reel-thumb" loading="lazy" decoding="async" />
                     {reel.video && (
                       <video
                         ref={(el) => { hoverVideoRefs.current[idx] = el; }}
@@ -1112,7 +1142,7 @@ export default function App() {
                   aria-label={`View full poster: ${poster.title}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(idx); } }}
                 >
-                  <img src={poster.src} alt={poster.title} />
+                  <img src={poster.src} alt={poster.title} loading="lazy" decoding="async" />
                   <div className="gallery-item-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
               ))}
@@ -1253,7 +1283,7 @@ export default function App() {
             </button>
 
             <div className="poster-frame" key={activePosterIndex}>
-              <img src={activePoster.src} alt={activePoster.title} className="poster-frame-img" />
+              <img src={activePoster.src} alt={activePoster.title} className="poster-frame-img" decoding="async" />
             </div>
 
             <div className="poster-modal-info">
