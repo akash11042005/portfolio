@@ -69,15 +69,15 @@ const REEL_MORPH_NAME = 'reel-hero-morph';
 // to the same index, so the morph + prev/next navigation stay in sync.
 const postersData = [
   {
-    tag: "POSTER MAKING",
-    title: "Visual storytelling, framed.",
-    desc: "Editorial poster blending warm vintage textures with clean, minimalist layout.",
+    tag: "HAND-DRAWN ILLUSTRATION",
+    title: "Where symmetry meets silence.",
+    desc: "A hand-drawn composition built through repeated patterns, fine details, and balanced symmetry. Every section was created slowly, one line at a time.",
     src: "/assets/poster1.png"
   },
   {
-    tag: "POSTER MAKING",
-    title: "Layouts that hold a mood.",
-    desc: "A typographic study in color-led composition, made for print and digital lookbooks.",
+    tag: "CONCEPT ART",
+    title: "Dreams painted beyond the stars.",
+    desc: "A visual interpretation of imagination and emotion, blending celestial colors with expressive silhouettes. Every piece tells a story where thoughts become galaxies and creativity knows no boundaries.",
     src: "/assets/poster2.png"
   },
   {
@@ -946,18 +946,16 @@ export default function App() {
                   onClick={() => openPoster(0)}
                   role="button"
                   tabIndex={0}
-                  aria-label="View full poster: Visual storytelling, framed."
+                  aria-label={`View full poster: ${postersData[0].title}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(0); } }}
                 >
                   <img src="/assets/poster1.png" alt="Aesthetic Poster Design" className="journey-img" />
                   <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
                 <div className="journey-content">
-                  <span className="journey-category">HAND-DRAWN ILLUSTRATION</span>
-                  <h3 className="journey-hook">Where symmetry meets silence.</h3>
-                  <p className="journey-desc">
-                    A hand-drawn composition built through repeated patterns, fine details, and balanced symmetry. Every section was created slowly, one line at a time.
-                  </p>
+                  <span className="journey-category">{postersData[0].tag}</span>
+                  <h3 className="journey-hook">{postersData[0].title}</h3>
+                  <p className="journey-desc">{postersData[0].desc}</p>
                 </div>
               </div>
 
@@ -969,18 +967,16 @@ export default function App() {
                   onClick={() => openPoster(1)}
                   role="button"
                   tabIndex={0}
-                  aria-label="View full poster: Layouts that hold a mood."
+                  aria-label={`View full poster: ${postersData[1].title}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(1); } }}
                 >
                   <img src="/assets/poster2.png" alt="Editorial Poster Series" className="journey-img" />
                   <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
                 <div className="journey-content">
-                  <span className="journey-category">CONCEPT ART</span>
-                  <h3 className="journey-hook">Dreams painted beyond the stars.</h3>
-                  <p className="journey-desc">
-                    A visual interpretation of imagination and emotion, blending celestial colors with expressive silhouettes. Every piece tells a story where thoughts become galaxies and creativity knows no boundaries.
-                  </p>
+                  <span className="journey-category">{postersData[1].tag}</span>
+                  <h3 className="journey-hook">{postersData[1].title}</h3>
+                  <p className="journey-desc">{postersData[1].desc}</p>
                   <button type="button" className="journey-cta journey-cta-btn" onClick={() => setActiveGallery(galleryData.posters)}>
                     View more posters <i className="fa-solid fa-arrow-right-long"></i>
                   </button>
