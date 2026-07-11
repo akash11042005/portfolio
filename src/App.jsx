@@ -160,6 +160,8 @@ export default function App() {
   const progressFillRef = useRef(null);
   const progressRafRef = useRef(null);
   const touchStartYRef = useRef(null);
+  const navLinksRef = useRef(null);
+  const hamburgerRef = useRef(null);
 
   const activeReel = activeReelIndex !== null ? reelsData[activeReelIndex] : null;
   const activeVideo = activeReel ? activeReel.video : null;
@@ -238,10 +240,13 @@ export default function App() {
     return () => observer.disconnect();
   }, []);
 
-  // Butterfly Cursor Companion (Desktop Only) with High Performance translate3d
+  // Butterfly Cursor Companion — works with mouse on desktop AND touch on
+  // mobile/tablet. On touch devices there's no persistent "hover" position,
+  // so the butterfly simply travels to wherever the last touch landed and
+  // settles into its idle float there until the next touch.
   useEffect(() => {
     const bfly = butterflyRef.current;
-    if (!bfly || window.innerWidth <= 1024) return;
+    if (!bfly) return;
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
@@ -258,10 +263,7 @@ export default function App() {
     const FOLLOW_SPEED = 0.065;
     const ANGLE_SPEED = 0.07;
 
-    const handleMouseMove = (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
+    const markMoving = () => {
       if (bfly.style.opacity !== '0.65') {
         bfly.style.opacity = '0.65';
       }
@@ -280,6 +282,23 @@ export default function App() {
       }, 180);
     };
 
+    const handleMouseMove = (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      markMoving();
+    };
+
+    const handleTouchMove = (e) => {
+      if (!e.touches || !e.touches.length) return;
+      mouseX = e.touches[0].clientX;
+      mouseY = e.touches[0].clientY;
+      markMoving();
+    };
+
+    const handleTouchStart = (e) => {
+      handleTouchMove(e);
+    };
+
     const handleMouseLeave = () => {
       bfly.style.opacity = '0';
     };
@@ -289,6 +308,8 @@ export default function App() {
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
 
@@ -333,6 +354,8 @@ export default function App() {
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
       cancelAnimationFrame(animationFrameId);
@@ -827,7 +850,23 @@ export default function App() {
         <div className="nav-container">
           <a href="#" className="nav-logo" onClick={() => setIsNavOpen(false)}>LAVANYA</a>
 
-          <nav className={`nav-links ${isNavOpen ? 'open' : ''}`} id="navLinks">
+          {/* Backdrop — covers the area the slide-in nav panel doesn't
+              (and, on larger screens, is simply hidden via CSS). Tapping
+              or clicking anywhere on it closes the mobile menu. */}
+          {isNavOpen && (
+            <div
+              className="nav-backdrop"
+              onClick={() => setIsNavOpen(false)}
+              aria-hidden="true"
+            ></div>
+          )}
+
+          <nav
+            className={`nav-links ${isNavOpen ? 'open' : ''}`}
+            id="navLinks"
+            ref={navLinksRef}
+            onClick={() => setIsNavOpen(false)}
+          >
             <a href="#hero" className={`nav-link ${activeSection === 'hero' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>Home</a>
             <a href="#journey" className={`nav-link ${activeSection === 'journey' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>Crafts</a>
             <a href="#reels" className={`nav-link ${activeSection === 'reels' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>Reels</a>
@@ -838,9 +877,14 @@ export default function App() {
             <div className="nav-socials">
               <a href="https://www.instagram.com/lavanyay.y?igsh=d281OHBmbzZwbDJy" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-ig" aria-label="Instagram"><i className="fa-brands fa-instagram"></i></a>
               <a href="https://www.youtube.com/@lavanyahh.h" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-yt" aria-label="YouTube"><i className="fa-brands fa-youtube"></i></a>
-              <a href="mailto:lavanyac027@gmail.com" className="social-chip" aria-label="Email"><i className="fa-regular fa-envelope"></i></a>
-            </div>
-            <button className={`hamburger ${isNavOpen ? 'open' : ''}`} id="hamburger" aria-label="Toggle navigation" onClick={() => setIsNavOpen(!isNavOpen)}>
+<a
+  href="mailto:lavanyac027@gmail.com?subject=Collaboration%20Inquiry"
+  target="_self"
+  aria-label="Email Lavanya"
+>
+  <i className="fa-regular fa-envelope"></i>
+</a>            </div>
+            <button ref={hamburgerRef} className={`hamburger ${isNavOpen ? 'open' : ''}`} id="hamburger" aria-label="Toggle navigation" onClick={() => setIsNavOpen(!isNavOpen)}>
               <span className="hamburger-line"></span>
               <span className="hamburger-line"></span>
               <span className="hamburger-line"></span>

@@ -60,42 +60,47 @@ button { font-family: inherit; outline: none; border: none; background: none; }
   width: 100%;
 }
 
-/* --- Butterfly --- */
-.butterfly { display: none; }
+/* --- Butterfly ---
+   Now visible on every screen size (mobile included) since the cursor
+   companion tracks touch as well as mouse input. Kept above everything
+   via z-index and fully non-interactive via pointer-events. */
+.butterfly {
+  display: block;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 1s ease;
+  will-change: transform;
+}
+.butterfly svg { overflow: visible; }
 
-@media (min-width: 500px) {
-  .butterfly {
-    display: block;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 1;
-    transition: opacity 1s ease;
-    will-change: transform;
-  }
-  .butterfly svg { overflow: visible; }
+@keyframes flapLeft {
+  0%   { transform: scaleX(1) skewY(0deg); }
+  35%  { transform: scaleX(0.25) skewY(-4deg); }
+  65%  { transform: scaleX(0.6) skewY(-2deg); }
+  100% { transform: scaleX(1) skewY(0deg); }
+}
+@keyframes flapRight {
+  0%   { transform: scaleX(1) skewY(0deg); }
+  35%  { transform: scaleX(0.25) skewY(4deg); }
+  65%  { transform: scaleX(0.6) skewY(2deg); }
+  100% { transform: scaleX(1) skewY(0deg); }
+}
 
-  @keyframes flapLeft {
-    0%   { transform: scaleX(1) skewY(0deg); }
-    35%  { transform: scaleX(0.25) skewY(-4deg); }
-    65%  { transform: scaleX(0.6) skewY(-2deg); }
-    100% { transform: scaleX(1) skewY(0deg); }
-  }
-  @keyframes flapRight {
-    0%   { transform: scaleX(1) skewY(0deg); }
-    35%  { transform: scaleX(0.25) skewY(4deg); }
-    65%  { transform: scaleX(0.6) skewY(2deg); }
-    100% { transform: scaleX(1) skewY(0deg); }
-  }
+.wing-left  { transform-origin: 40px 40px; }
+.wing-right { transform-origin: 40px 40px; }
 
-  .wing-left  { transform-origin: 40px 40px; }
-  .wing-right { transform-origin: 40px 40px; }
+.butterfly.flying .wing-left  { animation: flapLeft  0.18s ease-in-out infinite; }
+.butterfly.flying .wing-right { animation: flapRight 0.18s ease-in-out infinite; }
+.butterfly.idle .wing-left    { animation: flapLeft  1.4s ease-in-out infinite; }
+.butterfly.idle .wing-right   { animation: flapRight 1.4s ease-in-out infinite; }
 
-  .butterfly.flying .wing-left  { animation: flapLeft  0.18s ease-in-out infinite; }
-  .butterfly.flying .wing-right { animation: flapRight 0.18s ease-in-out infinite; }
-  .butterfly.idle .wing-left    { animation: flapLeft  1.4s ease-in-out infinite; }
-  .butterfly.idle .wing-right   { animation: flapRight 1.4s ease-in-out infinite; }
+/* Slightly smaller footprint on narrow phones so it doesn't dominate the
+   viewport, without hiding it the way the old min-width gate did. */
+@media (max-width: 480px) {
+  .butterfly svg { width: 44px; height: 44px; }
 }
 
 .bg-blobs-container {
@@ -251,6 +256,12 @@ body {
 .hamburger.open .hamburger-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .hamburger.open .hamburger-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
+/* Mobile nav backdrop — sits behind the slide-in nav-links panel and in
+   front of the page content. Tapping it (i.e. tapping the ~30% of the
+   screen the panel itself doesn't cover) closes the menu. Hidden on
+   desktop/tablet where the nav is an inline row, not an overlay. */
+.nav-backdrop { display: none; }
+
 @media (max-width: 768px) {
   .hamburger { display: flex; }
   .nav-links {
@@ -272,6 +283,22 @@ body {
   .nav-links.open { right: 0; }
   .nav-link { font-size: 1rem; letter-spacing: 0.18em; }
   .nav-socials { display: none; }
+
+  .nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1040;
+    background: rgba(15, 12, 12, 0.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    animation: navBackdropFadeIn 0.3s ease;
+  }
+}
+
+@keyframes navBackdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ==========================================
@@ -1748,6 +1775,7 @@ body {
   .poster-modal-panel[data-nav-dir] .poster-frame-img { animation: none; }
   .reel-buffering span { animation: none; opacity: 0.7; }
   .social-chip { transition: none; }
+  .nav-backdrop { animation: none; }
   ::view-transition-group(*),
   ::view-transition-old(*),
   ::view-transition-new(*) {
