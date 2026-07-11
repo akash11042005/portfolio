@@ -171,29 +171,11 @@ export default function App() {
   // References for scroll spy
   const sectionIds = ['hero', 'journey', 'reels', 'contact'];
 
-  // Handle Scroll Spy & Navbar Scroll Styling — throttled with rAF to prevent
-  // re-render storms, AND with section positions measured once (not on every
-  // scroll frame). Reading el.offsetTop inside the scroll handler forces the
-  // browser to do a synchronous layout recalculation on every single frame —
-  // that's a classic source of scroll jank, and it's much more visible on
-  // mobile GPUs than on desktop. Measuring once up front (and re-measuring
-  // only on resize/orientation change/load) means the actual scroll handler
-  // does zero DOM reads, just cheap number comparisons.
+  // Handle Scroll Spy & Navbar Scroll Styling — throttled with rAF to prevent re-render storms
   useEffect(() => {
     let rafId = null;
-    let resizeTimeoutId = null;
     let lastScrolled = false;
     let lastSection = 'hero';
-    let sectionOffsets = [];
-
-    const measureSections = () => {
-      sectionOffsets = sectionIds
-        .map((id) => {
-          const el = document.getElementById(id);
-          return el ? { id, top: el.offsetTop, height: el.offsetHeight } : null;
-        })
-        .filter(Boolean);
-    };
 
     const handleScroll = () => {
       if (rafId) return; // already scheduled, skip
@@ -207,14 +189,16 @@ export default function App() {
           setScrolled(nowScrolled);
         }
 
-        // Scroll Spy Active Link — pure math against the cached offsets,
-        // no DOM reads here.
+        // Scroll Spy Active Link
         const scrollPos = window.scrollY + 200;
         let currentSection = 'hero';
-        for (const sec of sectionOffsets) {
-          if (scrollPos >= sec.top && scrollPos < sec.top + sec.height) {
-            currentSection = sec.id;
-            break;
+        for (const id of sectionIds) {
+          const el = document.getElementById(id);
+          if (el) {
+            if (scrollPos >= el.offsetTop && scrollPos < el.offsetTop + el.offsetHeight) {
+              currentSection = id;
+              break;
+            }
           }
         }
         if (currentSection !== lastSection) {
@@ -224,23 +208,12 @@ export default function App() {
       });
     };
 
-    const handleResize = () => {
-      clearTimeout(resizeTimeoutId);
-      resizeTimeoutId = setTimeout(measureSections, 150);
-    };
-
-    measureSections();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize, { passive: true });
-    window.addEventListener('load', measureSections);
     handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('load', measureSections);
       if (rafId) cancelAnimationFrame(rafId);
-      clearTimeout(resizeTimeoutId);
     };
   }, []);
 
@@ -904,15 +877,13 @@ export default function App() {
             <div className="nav-socials">
               <a href="https://www.instagram.com/lavanyay.y?igsh=d281OHBmbzZwbDJy" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-ig" aria-label="Instagram"><i className="fa-brands fa-instagram"></i></a>
               <a href="https://www.youtube.com/@lavanyahh.h" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-yt" aria-label="YouTube"><i className="fa-brands fa-youtube"></i></a>
-              <a
-                href="mailto:lavanyac027@gmail.com?subject=Collaboration%20Inquiry"
-                target="_self"
-                className="social-chip social-chip-mail"
-                aria-label="Email Lavanya"
-              >
-                <i className="fa-regular fa-envelope"></i>
-              </a>
-            </div>
+<a
+  href="mailto:lavanyac027@gmail.com?subject=Collaboration%20Inquiry"
+  target="_self"
+  aria-label="Email Lavanya"
+>
+  <i className="fa-regular fa-envelope"></i>
+</a>            </div>
             <button ref={hamburgerRef} className={`hamburger ${isNavOpen ? 'open' : ''}`} id="hamburger" aria-label="Toggle navigation" onClick={() => setIsNavOpen(!isNavOpen)}>
               <span className="hamburger-line"></span>
               <span className="hamburger-line"></span>
@@ -943,16 +914,16 @@ export default function App() {
 
             <div className="hero-moodboard">
               <div className="polaroid polaroid-1">
-                <img src="/assets/hero1.png" alt="Moodboard image 1" decoding="async" />
+                <img src="/assets/hero1.png" alt="Moodboard image 1" />
               </div>
               <div className="polaroid polaroid-2">
-                <img src="/assets/hero4.png" alt="Moodboard image 2" decoding="async" />
+                <img src="/assets/hero4.png" alt="Moodboard image 2" />
               </div>
               <div className="polaroid polaroid-3">
-                <img src="/assets/hero2.png" alt="Moodboard image 3" decoding="async" />
+                <img src="/assets/hero2.png" alt="Moodboard image 3" />
               </div>
               <div className="polaroid polaroid-4">
-                <img src="/assets/hero3.png" alt="Moodboard image 4" decoding="async" />
+                <img src="/assets/hero3.png" alt="Moodboard image 4" />
               </div>
             </div>
           </div>
@@ -978,7 +949,7 @@ export default function App() {
                   aria-label={`View full poster: ${postersData[0].title}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(0); } }}
                 >
-                  <img src="/assets/poster1.png" alt="Aesthetic Poster Design" className="journey-img" loading="lazy" decoding="async" />
+                  <img src="/assets/poster1.png" alt="Aesthetic Poster Design" className="journey-img" />
                   <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
                 <div className="journey-content">
@@ -999,7 +970,7 @@ export default function App() {
                   aria-label={`View full poster: ${postersData[1].title}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(1); } }}
                 >
-                  <img src="/assets/poster2.png" alt="Editorial Poster Series" className="journey-img" loading="lazy" decoding="async" />
+                  <img src="/assets/poster2.png" alt="Editorial Poster Series" className="journey-img" />
                   <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
                 <div className="journey-content">
@@ -1038,7 +1009,7 @@ export default function App() {
                     onMouseEnter={() => handleCardMouseEnter(idx, !!reel.video)}
                     onMouseLeave={handleCardMouseLeave}
                   >
-                    <img src={reel.thumb} alt={reel.title} className="reel-thumb" loading="lazy" decoding="async" />
+                    <img src={reel.thumb} alt={reel.title} className="reel-thumb" />
                     {reel.video && (
                       <video
                         ref={(el) => { hoverVideoRefs.current[idx] = el; }}
@@ -1139,7 +1110,7 @@ export default function App() {
                   aria-label={`View full poster: ${poster.title}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(idx); } }}
                 >
-                  <img src={poster.src} alt={poster.title} loading="lazy" decoding="async" />
+                  <img src={poster.src} alt={poster.title} />
                   <div className="gallery-item-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
               ))}

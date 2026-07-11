@@ -39,10 +39,6 @@ html {
   color: var(--color-dark);
   overflow-x: hidden;
   width: 100%;
-  /* Inertial "momentum" scrolling on iOS Safari — without this, scrolling
-     inside the page (and any internally-scrollable panel) can feel sticky
-     or stepped instead of gliding to a stop. */
-  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -51,12 +47,6 @@ body {
   width: 100%;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  -webkit-overflow-scrolling: touch;
-  /* Stops the page from fighting the scroll gesture at the very top/bottom
-     (rubber-band chaining into pull-to-refresh, address-bar hide/show
-     stutter, etc.) — the scroll itself stays native and smooth, this just
-     contains where the "bounce" is allowed to happen. */
-  overscroll-behavior-y: none;
 }
 
 img { max-width: 100%; height: auto; display: block; }
@@ -167,12 +157,6 @@ body {
   z-index: 1000;
   padding: 2rem 0;
   transition: padding 0.4s ease, background 0.4s ease;
-  /* Own compositor layer: without this, a fixed element with backdrop-filter
-     gets re-sampled against whatever's scrolling underneath it on every
-     frame, which is one of the biggest causes of janky mobile scrolling. */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  will-change: transform;
 }
 
 .nav-container {
@@ -232,13 +216,6 @@ body {
   color: #fff;
   border-color: transparent;
   box-shadow: 0 6px 22px rgba(255, 0, 0, 0.35);
-}
-
-.social-chip-mail:hover {
-  background: var(--color-dark);
-  color: #fff;
-  border-color: transparent;
-  box-shadow: 0 6px 22px rgba(31, 27, 26, 0.3);
 }
 
 .social-chip-label {
@@ -1731,21 +1708,6 @@ body {
   .poster-nav-btn { display: none; }
   .poster-modal-title { font-size: 1.05rem; }
   .poster-modal-desc { font-size: 0.76rem; }
-
-  /* Lighter blur on mobile — backdrop-filter is one of the most GPU-
-     expensive things a browser does, and heavy blur radii on elements
-     that sit above scrolling content (the navbar, the glass social chips)
-     is a common cause of dropped frames on phones. Cutting the radius
-     roughly in half keeps the glass look while costing much less per
-     frame. */
-  .navbar.scrolled-active {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-  .social-chip {
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
-  }
 }
 
 @media (max-width: 400px) {
