@@ -909,10 +909,10 @@ export default function App() {
                   <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
                 <div className="journey-content">
-                  <span className="journey-category">POSTER MAKING</span>
-                  <h3 className="journey-hook">Visual storytelling, framed.</h3>
+                  <span className="journey-category">HAND-DRAWN ILLUSTRATION</span>
+                  <h3 className="journey-hook">Where symmetry meets silence.</h3>
                   <p className="journey-desc">
-                    Designing editorial graphic posters that blend warm vintage paper textures, organic vector shapes, and clean minimalist layouts. Each piece represents a discipline of grid alignment and color stories, designed to capture authentic everyday statements in physical print.
+                    A hand-drawn composition built through repeated patterns, fine details, and balanced symmetry. Every section was created slowly, one line at a time.
                   </p>
                 </div>
               </div>
@@ -932,10 +932,10 @@ export default function App() {
                   <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
                 </div>
                 <div className="journey-content">
-                  <span className="journey-category">POSTER MAKING</span>
-                  <h3 className="journey-hook">Layouts that hold a mood.</h3>
+                  <span className="journey-category">CONCEPT ART</span>
+                  <h3 className="journey-hook">Dreams painted beyond the stars.</h3>
                   <p className="journey-desc">
-                    A growing archive of editorial posters, typographic studies, and color-led layouts made for print and digital lookbooks alike. Every new piece adds to the same visual language.
+                    A visual interpretation of imagination and emotion, blending celestial colors with expressive silhouettes. Every piece tells a story where thoughts become galaxies and creativity knows no boundaries.
                   </p>
                   <button type="button" className="journey-cta journey-cta-btn" onClick={() => setActiveGallery(galleryData.posters)}>
                     View more posters <i className="fa-solid fa-arrow-right-long"></i>
