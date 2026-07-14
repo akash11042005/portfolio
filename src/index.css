@@ -69,31 +69,27 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
 .reveal-on-scroll.revealed { opacity: 1; transform: translateY(0); }
 
 /* ── Butterfly Cursor ─────────────────────────────────────────────── */
-.butterfly { display: none; }
-
-@media (min-width: 500px) {
-  .butterfly {
-    display: block;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0;
-    transition: opacity 1s ease;
-    will-change: transform;
-  }
-  .butterfly svg { overflow: visible; }
-
-  @keyframes flapLeft  { 0%,100%{transform:scaleX(1) skewY(0);}35%{transform:scaleX(.25) skewY(-4deg);}65%{transform:scaleX(.6) skewY(-2deg);} }
-  @keyframes flapRight { 0%,100%{transform:scaleX(1) skewY(0);}35%{transform:scaleX(.25) skewY(4deg); }65%{transform:scaleX(.6) skewY(2deg);} }
-
-  .wing-left  { transform-origin: 40px 40px; }
-  .wing-right { transform-origin: 40px 40px; }
-  .butterfly.flying .wing-left  { animation: flapLeft  0.18s ease-in-out infinite; }
-  .butterfly.flying .wing-right { animation: flapRight 0.18s ease-in-out infinite; }
-  .butterfly.idle   .wing-left  { animation: flapLeft  1.4s  ease-in-out infinite; }
-  .butterfly.idle   .wing-right { animation: flapRight 1.4s  ease-in-out infinite; }
+.butterfly {
+  display: block;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 1s ease;
+  will-change: transform;
 }
+.butterfly svg { overflow: visible; }
+
+@keyframes flapLeft  { 0%,100%{transform:scaleX(1) skewY(0);}35%{transform:scaleX(.25) skewY(-4deg);}65%{transform:scaleX(.6) skewY(-2deg);} }
+@keyframes flapRight { 0%,100%{transform:scaleX(1) skewY(0);}35%{transform:scaleX(.25) skewY(4deg); }65%{transform:scaleX(.6) skewY(2deg);} }
+
+.wing-left  { transform-origin: 40px 40px; }
+.wing-right { transform-origin: 40px 40px; }
+.butterfly.flying .wing-left  { animation: flapLeft  0.18s ease-in-out infinite; }
+.butterfly.flying .wing-right { animation: flapRight 0.18s ease-in-out infinite; }
+.butterfly.idle   .wing-left  { animation: flapLeft  1.4s  ease-in-out infinite; }
+.butterfly.idle   .wing-right { animation: flapRight 1.4s  ease-in-out infinite; }
 
 /* ── Social Chips ─────────────────────────────────────────────────── */
 .social-chip {
@@ -423,12 +419,12 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
 }
 
 /* ======================================================================
-   WORK SECTION  (dark)
+   WORK SECTION
    ====================================================================== */
 .work-section {
-  background: var(--color-ink);
+  background: transparent;
   padding: 8rem 0;
-  color: #fff;
+  color: var(--color-ink);
 }
 
 .work-header {
@@ -443,7 +439,7 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   font-size: clamp(5rem, 13vw, 11rem);
   font-weight: 300;
   line-height: 0.8;
-  color: rgba(255,255,255,0.05);
+  color: rgba(14,12,11,0.05);
   letter-spacing: -0.05em;
   flex-shrink: 0;
   user-select: none;
@@ -474,26 +470,34 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   letter-spacing: -0.02em;
   color: var(--color-ink);
 }
-.section-title.light { color: rgba(255,255,255,0.9); }
+.section-title.light { color: var(--color-ink); }
 
 /* Work grid */
 .work-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2px;
-  border-radius: 16px;
-  overflow: hidden;
-  background: rgba(255,255,255,0.03);
+  gap: 2.5rem;
+  border-radius: 0;
+  overflow: visible;
+  background: none;
 }
 
 .work-card {
   display: flex;
   flex-direction: column;
-  background: var(--color-ink-soft);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(31, 27, 26, 0.06);
+  border-radius: 20px;
   overflow: hidden;
-  transition: background 0.22s var(--ease-std);
+  box-shadow: 0 10px 30px rgba(14,12,11,0.03);
+  transition: all 0.6s var(--ease);
 }
-.work-card:hover { background: #231F1D; }
+.work-card:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-6px);
+  border-color: rgba(200, 48, 107, 0.15);
+  box-shadow: 0 20px 40px rgba(200, 48, 107, 0.06);
+}
 
 .work-card-img-wrap {
   position: relative;
@@ -562,13 +566,13 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   font-size: clamp(1.15rem, 1.7vw, 1.65rem);
   font-weight: 400;
   line-height: 1.3;
-  color: rgba(255,255,255,0.9);
+  color: var(--color-ink);
 }
 
 .work-card-desc {
   font-size: 0.86rem;
   font-weight: 300;
-  color: rgba(255,255,255,0.46);
+  color: var(--color-muted);
   line-height: 1.7;
 }
 
@@ -582,7 +586,7 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
+  color: var(--color-muted);
   position: relative;
   padding-bottom: 2px;
   font-family: inherit;
@@ -598,7 +602,7 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   background: var(--color-accent);
   transition: width 0.5s var(--ease);
 }
-.work-card-more:hover { color: #fff; }
+.work-card-more:hover { color: var(--color-ink); }
 .work-card-more:hover::after { width: 100%; }
 .work-card-more i { transition: transform 0.3s var(--ease); }
 .work-card-more:hover i { transform: translateX(4px); }
@@ -608,10 +612,7 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
    ====================================================================== */
 .reels-section {
   padding: 8rem 0 10rem;
-  /* Seamless transition from the dark work section */
-  background:
-    linear-gradient(180deg, var(--color-ink) 0%, var(--color-ink) 5.5rem, transparent 5.5rem),
-    var(--color-paper);
+  background: transparent;
 }
 
 .reels-header {
@@ -711,11 +712,11 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
 .reel-desc  { display: none; }
 
 /* ======================================================================
-   CONTACT / FOOTER  (dark)
+   CONTACT / FOOTER
    ====================================================================== */
 .contact-footer {
-  background: var(--color-ink);
-  color: #fff;
+  background: transparent;
+  color: var(--color-ink);
   padding: 8rem 0 0;
 }
 
@@ -741,7 +742,7 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   font-weight: 300;
   line-height: 1.08;
   letter-spacing: -0.03em;
-  color: rgba(255,255,255,0.93);
+  color: var(--color-ink);
   margin-bottom: 1.5rem;
 }
 .contact-headline .italic-serif { font-style: italic; color: var(--color-accent); }
@@ -754,7 +755,7 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.3);
+  color: var(--color-muted);
   margin-bottom: 4rem;
 }
 .contact-disciplines .sep { opacity: 0.25; }
@@ -766,8 +767,8 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   padding: 1.1rem 2.4rem;
   border-radius: 60px;
   background: transparent;
-  border: 1.5px solid rgba(255,255,255,0.18);
-  color: rgba(255,255,255,0.82);
+  border: 1.5px solid rgba(14,12,11,0.15);
+  color: var(--color-ink);
   font-family: var(--font-sans);
   font-size: clamp(0.85rem, 1.3vw, 1rem);
   font-weight: 400;
@@ -793,20 +794,36 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   padding: 0 1.2rem;
   border-radius: 20px;
   height: 36px;
-  border-color: rgba(255,255,255,0.12) !important;
-  background: rgba(255,255,255,0.05) !important;
-  color: rgba(255,255,255,0.55) !important;
+  border-color: var(--glass-border) !important;
+  background: var(--glass-bg) !important;
+  color: var(--color-muted) !important;
   gap: 7px;
 }
+.contact-social-chip:hover {
+  color: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
+  box-shadow: 0 6px 18px var(--color-accent-glow) !important;
+}
+.contact-social-chip.social-chip-ig:hover {
+  background: linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+.contact-social-chip.social-chip-yt:hover {
+  background: #FF0000 !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+
 .contact-social-chip i { font-size: 0.9rem; }
 .contact-social-chip:hover { transform: scale(1.05) !important; }
 
 .footer-bottom {
   margin-top: 6rem;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid var(--color-border);
   padding: 1.4rem 0;
 }
-.copyright { font-size: 0.68rem; color: rgba(255,255,255,0.18); letter-spacing: 0.06em; }
+.copyright { font-size: 0.68rem; color: var(--color-muted); opacity: 0.7; letter-spacing: 0.06em; }
 
 /* ======================================================================
    GALLERY MODAL
