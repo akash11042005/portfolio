@@ -852,128 +852,139 @@ export default function App() {
 
   return (
     <>
-      {/* Butterfly Cursor Companion — SVG glow filter replaced with CSS drop-shadow for GPU acceleration */}
-      <div className="butterfly" id="butterfly" ref={butterflyRef} aria-hidden="true" style={{filter: 'drop-shadow(0 0 4px rgba(184,21,86,0.4))'}}>
-        <svg viewBox="0 0 80 80" width="56" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* ── Butterfly Cursor ───────────────────────────────────────────── */}
+      <div
+        className="butterfly"
+        ref={butterflyRef}
+        aria-hidden="true"
+        style={{ filter: 'drop-shadow(0 0 4px rgba(200,48,107,0.35))' }}
+      >
+        <svg viewBox="0 0 80 80" width="52" height="52" fill="none">
           <g>
             <g className="wing-group wing-left">
-              <path d="M40 40 C33 28 18 16 13 26 C8 35 24 36 40 40" stroke="rgba(184,21,86,0.9)" strokeWidth="2.2" strokeLinecap="round"/>
-              <path d="M40 40 C35 43 22 50 20 43 C18 36 31 38 40 40" stroke="rgba(184,21,86,0.7)" strokeWidth="1.6" strokeLinecap="round"/>
+              <path d="M40 40 C33 28 18 16 13 26 C8 35 24 36 40 40" stroke="rgba(200,48,107,0.9)" strokeWidth="2.2" strokeLinecap="round"/>
+              <path d="M40 40 C35 43 22 50 20 43 C18 36 31 38 40 40" stroke="rgba(200,48,107,0.7)" strokeWidth="1.6" strokeLinecap="round"/>
             </g>
             <g className="wing-group wing-right">
-              <path d="M40 40 C47 28 62 16 67 26 C72 35 56 36 40 40" stroke="rgba(184,21,86,0.9)" strokeWidth="2.2" strokeLinecap="round"/>
-              <path d="M40 40 C45 43 58 50 60 43 C62 36 49 38 40 40" stroke="rgba(184,21,86,0.7)" strokeWidth="1.6" strokeLinecap="round"/>
+              <path d="M40 40 C47 28 62 16 67 26 C72 35 56 36 40 40" stroke="rgba(200,48,107,0.9)" strokeWidth="2.2" strokeLinecap="round"/>
+              <path d="M40 40 C45 43 58 50 60 43 C62 36 49 38 40 40" stroke="rgba(200,48,107,0.7)" strokeWidth="1.6" strokeLinecap="round"/>
             </g>
-            <line x1="40" y1="28" x2="40" y2="50" stroke="rgba(184,21,86,0.65)" strokeWidth="1.2"/>
-            <path d="M40 28 Q35 20 32 17" stroke="rgba(184,21,86,0.55)" strokeWidth="0.9" strokeLinecap="round"/>
-            <path d="M40 28 Q45 20 48 17" stroke="rgba(184,21,86,0.55)" strokeWidth="0.9" strokeLinecap="round"/>
-            <circle cx="31.5" cy="16.5" r="1.5" fill="rgba(184,21,86,0.5)"/>
-            <circle cx="48.5" cy="16.5" r="1.5" fill="rgba(184,21,86,0.5)"/>
+            <line x1="40" y1="28" x2="40" y2="50" stroke="rgba(200,48,107,0.65)" strokeWidth="1.2"/>
+            <path d="M40 28 Q35 20 32 17" stroke="rgba(200,48,107,0.55)" strokeWidth="0.9" strokeLinecap="round"/>
+            <path d="M40 28 Q45 20 48 17" stroke="rgba(200,48,107,0.55)" strokeWidth="0.9" strokeLinecap="round"/>
+            <circle cx="31.5" cy="16.5" r="1.5" fill="rgba(200,48,107,0.5)"/>
+            <circle cx="48.5" cy="16.5" r="1.5" fill="rgba(200,48,107,0.5)"/>
           </g>
         </svg>
       </div>
 
-      {/* Blob divs removed from DOM — background gradient is now a static CSS radial-gradient on body */}
-
-      {/* Navigation Navbar */}
+      {/* ── Navbar ─────────────────────────────────────────────────────── */}
       <header className={`navbar ${scrolled ? 'scrolled-active' : ''}`} id="navbar">
         <div className="nav-container">
-          <a href="#" className="nav-logo" onClick={() => setIsNavOpen(false)}>LAVANYA</a>
+          <a href="#hero" className="nav-logo" onClick={() => setIsNavOpen(false)}>LAVANYA</a>
 
-          {/* Backdrop — covers the area the slide-in nav panel doesn't
-              (and, on larger screens, is simply hidden via CSS). Tapping
-              or clicking anywhere on it closes the mobile menu. */}
           {isNavOpen && (
-            <div
-              className="nav-backdrop"
-              onClick={() => setIsNavOpen(false)}
-              aria-hidden="true"
-            ></div>
+            <div className="nav-backdrop" onClick={() => setIsNavOpen(false)} aria-hidden="true" />
           )}
 
           <nav
             className={`nav-links ${isNavOpen ? 'open' : ''}`}
-            id="navLinks"
             ref={navLinksRef}
             onClick={() => setIsNavOpen(false)}
           >
-            <a href="#hero" className={`nav-link ${activeSection === 'hero' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>Home</a>
-            <a href="#journey" className={`nav-link ${activeSection === 'journey' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>Crafts</a>
-            <a href="#reels" className={`nav-link ${activeSection === 'reels' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>Reels</a>
-            <a href="#contact" className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`} onClick={() => setIsNavOpen(false)}>Contact</a>
+            <a href="#hero"    className={`nav-link ${activeSection === 'hero'    ? 'active' : ''}`}>Home</a>
+            <a href="#journey" className={`nav-link ${activeSection === 'journey' ? 'active' : ''}`}>Work</a>
+            <a href="#reels"   className={`nav-link ${activeSection === 'reels'   ? 'active' : ''}`}>Reels</a>
+            <a href="#contact" className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`}>Contact</a>
           </nav>
 
           <div className="nav-right">
             <div className="nav-socials">
-              <a href="https://www.instagram.com/lavanyay.y?igsh=d281OHBmbzZwbDJy" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-ig" aria-label="Instagram"><i className="fa-brands fa-instagram"></i></a>
-              <a href="https://www.youtube.com/@lavanyahh.h" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-yt" aria-label="YouTube"><i className="fa-brands fa-youtube"></i></a>
-              <a
-                href="mailto:lavanyac027@gmail.com?subject=Collaboration%20Inquiry"
-                target="_self"
-                className="social-chip social-chip-mail"
-                aria-label="Email Lavanya"
-              >
-                <i className="fa-regular fa-envelope"></i>
+              <a href="https://www.instagram.com/lavanyay.y?igsh=d281OHBmbzZwbDJy" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-ig" aria-label="Instagram">
+                <i className="fa-brands fa-instagram" />
+              </a>
+              <a href="https://www.youtube.com/@lavanyahh.h" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-yt" aria-label="YouTube">
+                <i className="fa-brands fa-youtube" />
+              </a>
+              <a href="mailto:lavanyac027@gmail.com?subject=Collaboration%20Inquiry" className="social-chip social-chip-mail" aria-label="Email Lavanya">
+                <i className="fa-regular fa-envelope" />
               </a>
             </div>
-            <button ref={hamburgerRef} className={`hamburger ${isNavOpen ? 'open' : ''}`} id="hamburger" aria-label="Toggle navigation" onClick={() => setIsNavOpen(!isNavOpen)}>
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
+            <button
+              ref={hamburgerRef}
+              className={`hamburger ${isNavOpen ? 'open' : ''}`}
+              aria-label="Toggle navigation"
+              onClick={() => setIsNavOpen(!isNavOpen)}
+            >
+              <span className="hamburger-line" />
+              <span className="hamburger-line" />
+              <span className="hamburger-line" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Main Contents */}
-      <main className="lookbook-main">
-        {/* Hero Section */}
+      {/* ── Main ───────────────────────────────────────────────────────── */}
+      <main>
+
+        {/* ════════ HERO ════════ */}
         <section className="hero-section" id="hero">
-          <div className="container hero-container">
-            <div className="hero-content reveal-on-scroll">
-              <h1 className="hero-title">
-                LAVANYA<br />
-                <span className="italic-serif">crafted.</span>
+          <div className="hero-container">
+
+            {/* Left: Text */}
+            <div className="hero-text">
+              <p className="hero-eyebrow reveal-on-scroll">Visual Creator · 19</p>
+              <h1 className="hero-title reveal-on-scroll">
+                LAVANYA
+                <em className="italic-serif">crafted.</em>
               </h1>
-              <p className="hero-subtitle">
-                19-year-old visual creator crafting aesthetic reels, editorial posters, and handmade crochet.<br />
-                Made by hand, made to move one frame, one stitch at a time.
+              <p className="hero-subtitle reveal-on-scroll">
+                Making aesthetic reels, editorial posters,<br />
+                and handmade art — one frame at a time.
               </p>
-              <div className="hero-actions">
+              <div className="hero-actions reveal-on-scroll">
                 <a href="#contact" className="btn btn-primary">Work with me</a>
+                <a href="#reels"   className="btn btn-ghost">View Reels <i className="fa-solid fa-arrow-right" /></a>
               </div>
             </div>
 
-            <div className="hero-moodboard">
-              <div className="polaroid polaroid-1">
-                <img src="/assets/hero1.png" alt="Moodboard image 1" loading="eager" decoding="async" fetchPriority="high" />
-              </div>
-              <div className="polaroid polaroid-2">
-                <img src="/assets/hero4.png" alt="Moodboard image 2" loading="eager" decoding="async" fetchPriority="high" />
-              </div>
-              <div className="polaroid polaroid-3">
-                <img src="/assets/hero2.png" alt="Moodboard image 3" loading="eager" decoding="async" />
-              </div>
-              <div className="polaroid polaroid-4">
-                <img src="/assets/hero3.png" alt="Moodboard image 4" loading="eager" decoding="async" />
+            {/* Right: Image stack */}
+            <div className="hero-visual" aria-hidden="true">
+              <div className="image-stack">
+                <img className="stack-img stack-1" src="/assets/hero1.png" alt="" loading="eager" decoding="async" fetchPriority="high" />
+                <img className="stack-img stack-2" src="/assets/hero4.png" alt="" loading="eager" decoding="async" fetchPriority="high" />
+                <img className="stack-img stack-3" src="/assets/hero2.png" alt="" loading="eager" decoding="async" />
+                <img className="stack-img stack-4" src="/assets/hero3.png" alt="" loading="eager" decoding="async" />
               </div>
             </div>
+
+          </div>
+
+          {/* Scroll hint */}
+          <div className="hero-scroll-hint" aria-hidden="true">
+            <span className="scroll-label">scroll</span>
+            <div className="scroll-line" />
           </div>
         </section>
 
-        {/* Creative Journey Section */}
-        <section className="journey-section" id="journey">
+        {/* ════════ WORK ════════ */}
+        <section className="work-section" id="journey">
           <div className="container">
-            <div className="section-header reveal-on-scroll">
-              <span className="section-tag">CREATIVE JOURNEY</span>
-              <h2 className="section-title">What I make, one piece at a time.</h2>
+            <div className="work-header reveal-on-scroll">
+              <span className="work-number" aria-hidden="true">01</span>
+              <div className="work-header-text">
+                <span className="section-tag">CREATIVE WORK</span>
+                <h2 className="section-title light">What I make, one piece at a time.</h2>
+              </div>
             </div>
+          </div>
 
-            <div className="journey-grid">
-              {/* Journey Item 1: Poster Making */}
-              <div className="journey-card reveal-on-scroll">
+          <div className="container">
+            <div className="work-grid">
+              {/* Card 1 */}
+              <article className="work-card reveal-on-scroll">
                 <div
-                  className="journey-media journey-media-clickable"
+                  className="work-card-img-wrap"
                   data-poster-idx={0}
                   onClick={() => openPoster(0)}
                   role="button"
@@ -981,20 +992,22 @@ export default function App() {
                   aria-label={`View full poster: ${postersData[0].title}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(0); } }}
                 >
-                  <img src="/assets/poster1.png" alt="Aesthetic Poster Design" className="journey-img" loading="lazy" decoding="async" />
-                  <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
+                  <img src="/assets/poster1.png" alt="Aesthetic Poster Design" className="work-card-img" loading="lazy" decoding="async" />
+                  <div className="work-card-overlay">
+                    <span className="work-card-cta">View <i className="fa-solid fa-arrow-up-right-from-square" /></span>
+                  </div>
                 </div>
-                <div className="journey-content">
-                  <span className="journey-category">{postersData[0].tag}</span>
-                  <h3 className="journey-hook">{postersData[0].title}</h3>
-                  <p className="journey-desc">{postersData[0].desc}</p>
+                <div className="work-card-body">
+                  <span className="work-card-tag">{postersData[0].tag}</span>
+                  <h3 className="work-card-title">{postersData[0].title}</h3>
+                  <p className="work-card-desc">{postersData[0].desc}</p>
                 </div>
-              </div>
+              </article>
 
-              {/* Journey Item 2: More Poster Work */}
-              <div className="journey-card reveal-on-scroll">
+              {/* Card 2 */}
+              <article className="work-card reveal-on-scroll">
                 <div
-                  className="journey-media journey-media-clickable"
+                  className="work-card-img-wrap"
                   data-poster-idx={1}
                   onClick={() => openPoster(1)}
                   role="button"
@@ -1002,36 +1015,42 @@ export default function App() {
                   aria-label={`View full poster: ${postersData[1].title}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(1); } }}
                 >
-                  <img src="/assets/poster2.png" alt="Editorial Poster Series" className="journey-img" loading="lazy" decoding="async" />
-                  <div className="poster-zoom-badge"><i className="fa-solid fa-expand"></i></div>
+                  <img src="/assets/poster2.png" alt="Editorial Poster Series" className="work-card-img" loading="lazy" decoding="async" />
+                  <div className="work-card-overlay">
+                    <span className="work-card-cta">View <i className="fa-solid fa-arrow-up-right-from-square" /></span>
+                  </div>
                 </div>
-                <div className="journey-content">
-                  <span className="journey-category">{postersData[1].tag}</span>
-                  <h3 className="journey-hook">{postersData[1].title}</h3>
-                  <p className="journey-desc">{postersData[1].desc}</p>
-                  <button type="button" className="journey-cta journey-cta-btn" onClick={() => setActiveGallery(galleryData.posters)}>
-                    View more posters <i className="fa-solid fa-arrow-right-long"></i>
+                <div className="work-card-body">
+                  <span className="work-card-tag">{postersData[1].tag}</span>
+                  <h3 className="work-card-title">{postersData[1].title}</h3>
+                  <p className="work-card-desc">{postersData[1].desc}</p>
+                  <button type="button" className="work-card-more" onClick={() => setActiveGallery(galleryData.posters)}>
+                    View all posters <i className="fa-solid fa-arrow-right-long" />
                   </button>
                 </div>
-              </div>
-
-              {/* Journey Item 1 and 2 only are kept. Crochet items deleted. */}
+              </article>
             </div>
           </div>
         </section>
 
-        {/* Reels Gallery Grid */}
+        {/* ════════ REELS ════════ */}
         <section className="reels-section" id="reels">
           <div className="container">
-            <div className="section-header reveal-on-scroll">
-              <span className="section-tag">SELECTED CREATION LOOPS</span>
+            <div className="reels-header reveal-on-scroll">
+              <span className="work-number work-number-light" aria-hidden="true">02</span>
+              <div className="work-header-text">
+                <span className="section-tag">SELECTED CREATION LOOPS</span>
+                <h2 className="section-title">Stories in motion.</h2>
+              </div>
             </div>
+          </div>
 
+          <div className="container">
             <div className="reels-grid">
               {reelsData.map((reel, idx) => (
                 <div
-                  className={`reel-card reveal-on-scroll${reel.video ? ' reel-card-playable' : ''}`}
                   key={idx}
+                  className={`reel-card reveal-on-scroll${reel.video ? ' reel-card-playable' : ''}${idx === 1 || idx === 3 ? ' reel-card-tall' : ''}`}
                   onClick={() => reel.video && openReel(idx)}
                   style={reel.video ? { cursor: 'pointer' } : undefined}
                 >
@@ -1048,83 +1067,80 @@ export default function App() {
                         className={`reel-hover-preview ${hoveredIdx === idx ? 'active' : ''}`}
                         src={reel.video}
                         poster={reel.thumb}
-                        muted
-                        loop
-                        playsInline
+                        muted loop playsInline
                         preload="metadata"
                         aria-hidden="true"
                         tabIndex={-1}
                       />
                     )}
-                    <div className="reel-badge"><i className="fa-solid fa-play"></i></div>
+                    <div className="reel-badge"><i className="fa-solid fa-play" /></div>
                   </div>
                   <div className="reel-meta">
                     <span className="reel-num">{reel.num}</span>
                     <h3 className="reel-title">{reel.title}</h3>
-                    <p className="reel-desc">{reel.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </section>
+
       </main>
 
-      {/* Unified Bio & Contact Footer */}
-      <footer className="footer reveal-on-scroll" id="contact">
-        <div className="container footer-container">
-          <div className="footer-left-col">
-            <h2 className="bio-title">If you're a brand looking to collaborate or need a creative eye on your next project then let's make something worth keeping.</h2>
-            <div className="bio-niches">
-              <span>Posters</span>
-              <span className="bullet">•</span>
-              <span>Transitions</span>
-              <span className="bullet">•</span>
-              <span>Reels</span>
-            </div>
-          </div>
+      {/* ── Contact / Footer ───────────────────────────────────────────── */}
+      <footer className="contact-footer reveal-on-scroll" id="contact">
+        <div className="container">
+          <div className="contact-inner">
+            <p className="contact-eyebrow">LET'S COLLABORATE</p>
 
-          <div className="footer-right-col">
-            {/* Repositioned Social links with logo icons, aligned perfectly with tag height */}
-            <div className="footer-contact-header">
-              <span className="footer-tag">LET'S COLLABORATE</span>
-              <div className="footer-header-socials">
-                <a href="https://www.instagram.com/lavanyay.y?igsh=d281OHBmbzZwbDJy" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-ig" aria-label="Instagram">
-                  <i className="fa-brands fa-instagram"></i> <span className="social-chip-label">Instagram</span>
-                </a>
-                <a href="https://www.youtube.com/@lavanyahh.h" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-yt" aria-label="YouTube">
-                  <i className="fa-brands fa-youtube"></i> <span className="social-chip-label">YouTube</span>
-                </a>
-              </div>
+            <h2 className="contact-headline">
+              If you're a brand —<br />
+              let's make something<br />
+              <em className="italic-serif">worth keeping.</em>
+            </h2>
+
+            <div className="contact-disciplines">
+              <span>Reels</span>
+              <span className="sep">·</span>
+              <span>Posters</span>
+              <span className="sep">·</span>
+              <span>Creative Direction</span>
             </div>
-            
-            <div className="contact-card">
-              <h2 className="footer-email-title">
-                <a href="mailto:lavanyac027@gmail.com" className="email-link">lavanyac027@gmail.com</a>
-              </h2>
-              <p className="footer-desc">For brand sponsorships, collaborations, or custom design queries.</p>
-              
-              <div className="contact-button-wrapper">
-                <a href="mailto:lavanyac027@gmail.com" className="btn btn-primary contact-btn" aria-label="Send email to Lavanya">
-                  <i className="fa-regular fa-envelope"></i> Click to Email Me
-                </a>
-              </div>
+
+            <a
+              href="mailto:lavanyac027@gmail.com?subject=Collaboration%20Inquiry"
+              className="contact-email-btn"
+              aria-label="Email Lavanya"
+            >
+              <i className="fa-regular fa-envelope" />
+              lavanyac027@gmail.com
+            </a>
+
+            <div className="contact-socials">
+              <a href="https://www.instagram.com/lavanyay.y?igsh=d281OHBmbzZwbDJy" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-ig contact-social-chip" aria-label="Instagram">
+                <i className="fa-brands fa-instagram" /> <span className="social-chip-label">Instagram</span>
+              </a>
+              <a href="https://www.youtube.com/@lavanyahh.h" target="_blank" rel="noopener noreferrer" className="social-chip social-chip-yt contact-social-chip" aria-label="YouTube">
+                <i className="fa-brands fa-youtube" /> <span className="social-chip-label">YouTube</span>
+              </a>
             </div>
           </div>
         </div>
-        
-        <div className="container footer-bottom">
-          <p className="copyright">&copy; {new Date().getFullYear()} Lavanya. All rights reserved.</p>
+
+        <div className="footer-bottom">
+          <div className="container">
+            <p className="copyright">© {new Date().getFullYear()} Lavanya. All rights reserved.</p>
+          </div>
         </div>
       </footer>
 
-      {/* Gallery Modal */}
+      {/* ── Gallery Modal ──────────────────────────────────────────────── */}
       {activeGallery && (
         <div className="gallery-modal open" role="dialog" aria-modal="true">
-          <div className="gallery-modal-backdrop" onClick={() => setActiveGallery(null)}></div>
+          <div className="gallery-modal-backdrop" onClick={() => setActiveGallery(null)} />
           <div className="gallery-modal-panel">
             <button type="button" className="gallery-modal-close" onClick={() => setActiveGallery(null)} aria-label="Close gallery">
-              <i className="fa-solid fa-xmark"></i>
+              <i className="fa-solid fa-xmark" />
             </button>
             <div className="gallery-modal-header">
               <span className="gallery-modal-tag">{activeGallery.tag}</span>
@@ -1133,8 +1149,8 @@ export default function App() {
             <div className="gallery-modal-grid">
               {postersData.map((poster, idx) => (
                 <div
-                  className="gallery-item-wrapper"
                   key={idx}
+                  className="gallery-item-wrapper"
                   data-poster-idx={idx}
                   onClick={() => openPoster(idx)}
                   role="button"
@@ -1143,7 +1159,7 @@ export default function App() {
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPoster(idx); } }}
                 >
                   <img src={poster.src} alt={poster.title} loading="lazy" decoding="async" />
-                  <div className="gallery-item-badge"><i className="fa-solid fa-expand"></i></div>
+                  <div className="gallery-item-badge"><i className="fa-solid fa-expand" /></div>
                 </div>
               ))}
             </div>
@@ -1151,10 +1167,10 @@ export default function App() {
         </div>
       )}
 
-      {/* Video Modal — Reel style, morphs from the clicked grid thumbnail */}
+      {/* ── Video Modal ────────────────────────────────────────────────── */}
       {activeReel && (
         <div className="video-modal open" role="dialog" aria-modal="true" aria-label={activeReel.title}>
-          <div className="video-modal-backdrop" onClick={closeReel}></div>
+          <div className="video-modal-backdrop" onClick={closeReel} />
           <div
             className={`video-modal-panel reel-style ${isMorphing ? 'is-morphing' : ''}`}
             ref={panelRef}
@@ -1163,97 +1179,62 @@ export default function App() {
             onTouchStart={handlePanelTouchStart}
             onTouchEnd={handlePanelTouchEnd}
           >
-            <button
-              type="button"
-              className="video-modal-close"
-              onClick={closeReel}
-              aria-label="Close video"
-            >
-              <i className="fa-solid fa-xmark"></i>
+            <button type="button" className="video-modal-close" onClick={closeReel} aria-label="Close video">
+              <i className="fa-solid fa-xmark" />
             </button>
-
-            <button
-              type="button"
-              className="video-fullscreen-toggle"
-              onClick={toggleFullscreen}
-              aria-label={isFullscreen ? 'Exit fullscreen' : 'View fullscreen'}
-            >
-              <i className={`fa-solid ${isFullscreen ? 'fa-compress' : 'fa-expand'}`}></i>
+            <button type="button" className="video-fullscreen-toggle" onClick={toggleFullscreen} aria-label={isFullscreen ? 'Exit fullscreen' : 'View fullscreen'}>
+              <i className={`fa-solid ${isFullscreen ? 'fa-compress' : 'fa-expand'}`} />
             </button>
-
             <div className="reel-counter">
               {String(activeReelIndex + 1).padStart(2, '0')} / {String(reelsData.length).padStart(2, '0')}
             </div>
-
             <div className="reel-nav-controls">
-              <button type="button" className="reel-nav-btn" onClick={goPrevReel} aria-label="Previous reel">
-                <i className="fa-solid fa-chevron-up"></i>
-              </button>
-              <button type="button" className="reel-nav-btn" onClick={goNextReel} aria-label="Next reel">
-                <i className="fa-solid fa-chevron-down"></i>
-              </button>
+              <button type="button" className="reel-nav-btn" onClick={goPrevReel} aria-label="Previous reel"><i className="fa-solid fa-chevron-up" /></button>
+              <button type="button" className="reel-nav-btn" onClick={goNextReel} aria-label="Next reel"><i className="fa-solid fa-chevron-down" /></button>
             </div>
-
             <button
               type="button"
               className="video-mute-toggle"
-              onClick={() => {
-                if (videoRef.current) {
-                  videoRef.current.muted = !videoRef.current.muted;
-                  setIsMuted(videoRef.current.muted);
-                }
-              }}
+              onClick={() => { if (videoRef.current) { videoRef.current.muted = !videoRef.current.muted; setIsMuted(videoRef.current.muted); } }}
               aria-label={isMuted ? 'Unmute video' : 'Mute video'}
             >
-              <i className={`fa-solid ${isMuted ? 'fa-volume-xmark' : 'fa-volume-high'}`}></i>
+              <i className={`fa-solid ${isMuted ? 'fa-volume-xmark' : 'fa-volume-high'}`} />
             </button>
-
             <video
               key={activeReelIndex}
               ref={videoRef}
               src={isMorphing ? null : activeVideo}
               poster={activeReel.thumb}
-              loop
-              muted={isMuted}
-              playsInline
-              preload="auto"
-              onClick={(e) => {
-                const v = e.currentTarget;
-                if (v.paused) v.play(); else v.pause();
-              }}
+              loop muted={isMuted} playsInline preload="auto"
+              onClick={(e) => { const v = e.currentTarget; if (v.paused) v.play(); else v.pause(); }}
               className="reel-video"
             />
-
             {isBuffering && !isMorphing && (
               <div className="reel-buffering" aria-hidden="true">
-                <span></span><span></span><span></span>
+                <span /><span /><span />
               </div>
             )}
-
             <div className="reel-modal-info">
               <h3 className="reel-modal-title">{activeReel.title}</h3>
               <p className="reel-modal-desc">{activeReel.desc}</p>
             </div>
-
             <div
               className="reel-progress-track"
               ref={progressTrackRef}
               onMouseDown={handleProgressPointerDown}
               onTouchStart={handleProgressPointerDown}
             >
-              <div className="reel-progress-bg"></div>
-              <div className="reel-progress-fill" ref={progressFillRef}></div>
+              <div className="reel-progress-bg" />
+              <div className="reel-progress-fill" ref={progressFillRef} />
             </div>
           </div>
         </div>
       )}
 
-      {/* Poster Modal — morphs from the clicked poster thumbnail, same
-          View Transitions technique as the reel viewer, but framed like a
-          portrait print instead of a vertical video (4:5 mat, not 9:16). */}
+      {/* ── Poster Modal ───────────────────────────────────────────────── */}
       {activePoster && (
         <div className="poster-modal open" role="dialog" aria-modal="true" aria-label={activePoster.title}>
-          <div className="poster-modal-backdrop" onClick={closePoster}></div>
+          <div className="poster-modal-backdrop" onClick={closePoster} />
           <div
             className="poster-modal-panel"
             ref={posterPanelRef}
@@ -1262,30 +1243,17 @@ export default function App() {
             onTouchStart={handlePosterTouchStart}
             onTouchEnd={handlePosterTouchEnd}
           >
-            <button
-              type="button"
-              className="poster-modal-close"
-              onClick={closePoster}
-              aria-label="Close poster"
-            >
-              <i className="fa-solid fa-xmark"></i>
+            <button type="button" className="poster-modal-close" onClick={closePoster} aria-label="Close poster">
+              <i className="fa-solid fa-xmark" />
             </button>
-
             <div className="poster-counter">
               {String(activePosterIndex + 1).padStart(2, '0')} / {String(postersData.length).padStart(2, '0')}
             </div>
-
-            <button type="button" className="poster-nav-btn poster-nav-prev" onClick={goPrevPoster} aria-label="Previous poster">
-              <i className="fa-solid fa-chevron-left"></i>
-            </button>
-            <button type="button" className="poster-nav-btn poster-nav-next" onClick={goNextPoster} aria-label="Next poster">
-              <i className="fa-solid fa-chevron-right"></i>
-            </button>
-
+            <button type="button" className="poster-nav-btn poster-nav-prev" onClick={goPrevPoster} aria-label="Previous poster"><i className="fa-solid fa-chevron-left" /></button>
+            <button type="button" className="poster-nav-btn poster-nav-next" onClick={goNextPoster} aria-label="Next poster"><i className="fa-solid fa-chevron-right" /></button>
             <div className="poster-frame" key={activePosterIndex}>
               <img src={activePoster.src} alt={activePoster.title} className="poster-frame-img" decoding="async" />
             </div>
-
             <div className="poster-modal-info">
               <span className="poster-modal-tag">{activePoster.tag}</span>
               <h3 className="poster-modal-title">{activePoster.title}</h3>
